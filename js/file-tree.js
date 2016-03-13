@@ -43,8 +43,14 @@
       cont = $("#" + node.idParent + ".line > .container-childs");
     //adiciona uma li
     var $line = $(FileTreeOptions.templates.child).attr({id: node.id});
+    //add click no check
+    $line.find(".checkButton").bind("mousedown", clickCheck.bind(this, node));
     //adiciona o filho
     $(cont).append($line);
+  }
+
+  function clickCheck(node) {
+    console.log("clickCheck", node);
   }
 
 })(jQuery);
