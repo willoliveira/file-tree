@@ -4,7 +4,7 @@
     templates: {
       containerParent: "<ul class=\"container-parent\">",
       containerChild: "<ul class=\"container-childs\">",
-      child: "<li><input class=\"checkButton\" type=\"checkbox\"/></li>"
+      child: "<li class=\"line\"><input class=\"checkButton\" type=\"checkbox\"/><ul class=\"container-childs\"></li>"
     }
   },
     FileTreeOptions;
@@ -13,7 +13,8 @@
   $.fn.fileTree = FileTree;
 
   function FileTree(options) {
-    console.log(options);
+    console.log(options, this);
+    containerParent = this;
     //se estiver dando um start no fileTree
     if (typeof options == "object" || typeof options == "undefined") {
       //configura o plugin
@@ -35,7 +36,15 @@
   }
 
   function addNode(node) {
-
+    if (!node.idParent) {
+      var container = ".container-parent";
+      cont = $(containerParent).children(".container-parent");
+    } else
+      cont = $("#" + node.idParent + ".line > .container-childs");
+    //adiciona uma li
+    var $line = $(FileTreeOptions.templates.child).attr({id: node.id});
+    //adiciona o filho
+    $(cont).append($line);
   }
 
-})(jQuery)
+})(jQuery);
