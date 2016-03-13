@@ -2,10 +2,46 @@
 <html>
 <head>
 	<script src="http://code.jquery.com/jquery-2.2.1.min.js"></script>
+	<script src="js/file-tree.js"></script>
 </head>
 <body>
 
-	
+	<div id="fileTree">
+	</div>
+	<script>
+		var files = [
+			{id: 1, idParent: null},
+			{id: 2, idParent: 1},
+			{id: 3, idParent: 1},
+			{id: 4, idParent: 2},
+			{id: 5, idParent: 2},
+			{id: 6, idParent: 2},
+			{id: 7, idParent: 3},
+			{id: 8, idParent: 3},
+		];
+		$("#fileTree").fileTree({
+			data: files
+		})
+	</script>
+
+	<ul>
+		<li>
+			<input class="checkButton" type="checkbox"/>
+			<ul class="container-childs">
+			</ul>
+		</li>
+	</ul>
+	<ul>
+		<li>
+			<input class="checkButton" type="checkbox"/>
+			<ul class="container-childs">
+				<li><input class="checkButton" type="checkbox"/></li>
+				<li><input class="checkButton" type="checkbox"/></li>
+				<li><input class="checkButton" type="checkbox"/></li>
+			</ul>
+		</li>
+		<li><input class="checkButton" type="checkbox"/></li>
+	</ul>
 
 
 </body>
