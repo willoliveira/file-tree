@@ -82,11 +82,12 @@
       //senao, faz o inverso do check atual
     else node.check = !node.check;
     //pega o check button do nó atual
-    var $node = $("#node-" + node.id + " > .checkButton");
+    var $node = $(this);
     $node.prop("checked", node.check);
     //se houver filhos, varre os filhos, chama a mesma função recursivamente
     if (node.childs.length) {
         node.childs.forEach(function(i){
+          let $node = $("#node-" + i + " > .checkButton");
           clickCheck.call($node, FileTreeOptions.data["node-" + i], node.check);
         });
     }
@@ -99,8 +100,13 @@
     FileTreeOptions.arrSelected.push(node.id);
   }
 
-  function checkParent(nodeParent, isChecked) {
+  function checkParent(node, isChecked) {
     console.log(this);
+    var $checkBox = $(this);
+    if (node.idParent) {
+      let $nodeParent = $("#node-" + node.idParent + " > .checkButton");
+      checkParent.call($nodeParent, FileTreeOptions.data["node-" + node.idParent], isChecked);
+    }
   }
 
 
