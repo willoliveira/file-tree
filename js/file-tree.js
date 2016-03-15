@@ -1,7 +1,10 @@
 (function($){
   /**
   TODO:
-  - fazer uma referencia do checkbox na criação do nó e guardar uma referencia
+  - revisar o código e retirar possiveis ambiguidades
+  - deixar os parametros dos nós configuraveis. Ex: [id, idParent, childs...]
+  - fazer a funcionalidade de adicionar mais nós em tempo de execução
+    . checkar os nós recem-adicionados caso os parents estiverem checkados
   */
   "use strict";
   var defaultOptions = {
@@ -20,7 +23,6 @@
   $.fn.fileTree = FileTree;
 
   function FileTree(options) {
-    console.log(options, this);
     containerParent = this;
     //se estiver dando um start no fileTree
     if (typeof options == "object" || typeof options == "undefined") {
