@@ -14,9 +14,10 @@
     arrSelected: []
   },
     FileTreeOptions,
+    arrSelected = [],
     containerParent;
 
-  //
+  //plugin
   $.fn.fileTree = FileTree;
 
   function FileTree(options) {
@@ -80,7 +81,9 @@
         $node: $node
     }
     //add click no check
-    $checkbox.bind("click", clickCheck.bind($checkbox, node, undefined));
+    $checkbox.bind("click", function(e) {
+      clickCheck.call($checkbox, node);
+    });
     //adiciona o filho
     $(container).append($node);
   }
@@ -88,15 +91,19 @@
   function clickCheck(node, forceCheck) {
     var isForced = typeof forceCheck != 'undefined';
     //se um parent foi clickado, o check é forçado
-    if (isForced) node.check = forceCheck;
+    if (isForced) {
+      node.check = forceCheck;
+    }
       //senao, faz o inverso do check atual
-    else node.check = !node.check;
+    else {
+      node.check = !node.check;
+    }
     //tira o check parcial caso for check true
-    if (node.check)
+    if (node.check) {
       node.elements.$checkButton.prop("indeterminate", false);
+    }
     //pega o check button do nó atual
-    var $node = $(this);
-    $node.prop("checked", node.check);
+    node.elements.prop("checked", node.check);
     //se houver filhos
     if (node.childs.length) {
       //varre os filhos, chama a mesma função recursivamente
