@@ -3,6 +3,9 @@
   TODO:
   - revisar o código e retirar possiveis ambiguidades
   - deixar os parametros dos nós configuraveis. Ex: [id, idParent, childs...]
+  - Armazenar os nós checkados
+    . por enquanto deixar apenas os ultimos filhos armaazenados nesse array de items selecionados
+    - preparar para conseguir adiciona o id do parent nos items selecionados quando todos os filhos estiverem selecionados
   - fazer a funcionalidade de adicionar mais nós em tempo de execução
     . checkar os nós recem-adicionados caso os parents estiverem checkados
   */
@@ -14,7 +17,9 @@
       child: "<li class=\"line\"><input class=\"checkButton\" type=\"checkbox\"/><ul class=\"container-childs\"></li>"
     },
     data: {},
-    arrSelected: []
+    arrSelected: [],
+    //por default será child, parent caso quiser configurar
+    persistsCheck: "child"
   },
     FileTreeOptions,
     arrSelected = [],
@@ -37,7 +42,10 @@
     }
     return this;
   }
-
+  /**
+  *
+  * @param initialData
+  */
   function init(initialData) {
     //Limpa a div e adiciona o container inicial
     document.getElementById("fileTree").innerHTML = FileTreeOptions.templates.containerParent;
@@ -48,7 +56,10 @@
       addNode(FileTreeOptions.data[index]);
     };
   }
-
+  /**
+  *
+  * @param arrData
+  */
   function formatNodes(arrData) {
     arrData.forEach(function(element, index) {
       //adiciona no objeto
@@ -58,7 +69,10 @@
       FileTreeOptions.data["node-" + element.id].check = false;
     });
   }
-
+  /**
+  *
+  * @param node
+  */
   function addNode(node) {
     var container,
       $node, $checkbox, $containerChilds,
@@ -89,7 +103,11 @@
     //adiciona o filho
     $(container).append($node);
   }
-
+  /**
+  *
+  * @param node
+  * @param forceCheck
+  */
   function clickCheck(node, forceCheck) {
     var isForced = typeof forceCheck != 'undefined';
     //se um parent foi clickado, o check é forçado
@@ -105,11 +123,11 @@
       node.elements.$checkButton.prop("indeterminate", false);
     }
     //pega o check button do nó atual
-    node.elements.prop("checked", node.check);
+    node.elements.$checkButton.prop("checked", node.check);
     //se houver filhos
     if (node.childs.length) {
       //varre os filhos, chama a mesma função recursivamente
-        node.childs.forEach(function(i){
+        node.childs.forEach(function(i) {
           let $node = $("#node-" + i + " > .checkButton");
           clickCheck.call($node, FileTreeOptions.data["node-" + i], node.check);
         });
@@ -120,10 +138,50 @@
       //chama a função que vai atras do parents para checkar os pais
       checkParent.call($parent, FileTreeOptions.data["node-" + node.idParent], node.check);
     }
+    //adiciona/remove dos array de items selecionados
+    toogleCheckSelected(node);
     //isso vai ser tenso..
     //FileTreeOptions.arrSelected.push(node.id);
   }
-
+  /**
+  * TODO: pensar melhor, se pa da pra aproveitar algum metodo que já uso
+  *
+  */
+  function toogleCheckSelected(node) {
+    //se houver filhos
+    if (FileTreeOptions.persistsCheck == "child" && !node.childs.length) {
+      //testa se o parent desse no esta adicionado no array de selecionado
+      let parentCheckIndex = FileTreeOptions.arrSelected.indexOf(node.idParent),
+          childCheckIndex = FileTreeOptions.arrSelected.indexOf(node.id);
+      //se estiver checkando
+      if (node.check) {
+        //remove o pai do array, caso ele estiver nele
+        if(parentCheckIndex > -1) {
+          FileTreeOptions.arrSelected.splice(parentCheckIndex, 1);
+        }
+        //se o no não estiver adicionado, adiciona
+        if (childCheckIndex == -1) {
+          FileTreeOptions.arrSelected.push(node.id);
+        }
+      }
+        //caso ele estiver des-checkando
+      else {
+        //se o no estiver adicionado, remove
+        if (childCheckIndex > -1) {
+          FileTreeOptions.arrSelected.splice(childCheckIndex, 1);
+        }
+      }
+    }
+    console.log(FileTreeOptions.arrSelected);
+    //fazer ainda
+    //else if (FileTreeOptions.persistsCheck == "parent") {}
+  }
+  /**
+  * TODO: deixar a funcionalidade de adicionar o indeterminate e checked a cargo de outra função
+  *
+  * @param node
+  * @param isChecked
+  */
   function checkParent(node, isChecked) {
     var $node = node.elements.$node,
         $checkBox = node.elements.$checkButton,
@@ -165,5 +223,21 @@
       checkParent.call($nodeParent, FileTreeOptions.data["node-" + node.idParent], isChecked);
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 })(jQuery);
