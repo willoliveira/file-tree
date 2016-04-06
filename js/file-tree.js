@@ -8,6 +8,7 @@
     - preparar para conseguir adiciona o id do parent nos items selecionados quando todos os filhos estiverem selecionados
   - fazer a funcionalidade de adicionar mais nós em tempo de execução
     . checkar os nós recem-adicionados caso os parents estiverem checkados
+    
   */
   "use strict";
   var defaultOptions = {
